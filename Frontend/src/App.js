@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Route, BrowserRouter, Routes } from 'react-router-dom';
+import Header from './components/Header';
+import HomePage from './components/HomePage';
+import CampaignsPage from './components/CampaignsPage';
+import AudiencePage from './components/AudiencePage';
+import MessagePage from './components/MessagePage';
+import LoginPage from './components/LoginPage'; // Import the LoginPage
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} /> {/* Add route for login */}
+        <Route path="/campaigns" element={<CampaignsPage />} />
+        <Route path="/audience" element={<AudiencePage />} />
+        <Route path="/send-message" element={<MessagePage />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
