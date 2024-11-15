@@ -23,7 +23,6 @@ router.post('/update-status/:logId', async (req, res) => {
     }
 });
 
-// POST Route to update message delivery status
 router.post('/delivery-receipt', async (req, res) => {
     const { logId, status } = req.body;
 

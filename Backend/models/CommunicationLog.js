@@ -1,17 +1,18 @@
-const mongoose = require('mongoose');
+// src/models/CommunicationLog.js
 
-const CommunicationLogSchema = new mongoose.Schema({
-  campaignId: Number,
-  customerId: mongoose.Schema.Types.ObjectId,
-  status: {
-    type: String,
-    enum: ['SENT', 'FAILED']
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const communicationLogSchema = new Schema({
+  campaignId: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Campaign',
+    required: true
   },
-  message: String,
-  timestamp: {
-    type: Date,
-    default: Date.now
-  }
+  customerId: { type: String, required: true }, 
+  status: { type: String, enum: ['SENT', 'FAILED'], required: true },
+  message: { type: String, required: true },  
+  timestamp: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('CommunicationLog', CommunicationLogSchema);
+module.exports = mongoose.model('CommunicationLog', communicationLogSchema);

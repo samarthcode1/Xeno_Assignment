@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const Campaign = require('../models/Campaign'); // Assuming Campaign model is set up
-// POST route to create a campaign
+const Campaign = require('../models/Campaign'); 
 router.post('/', async (req, res) => {
     const { name, message } = req.body;
-
-    // Log the request body to verify that 'message' is being passed
     console.log("Request body:", req.body);
 
     if (!name || !message) {
