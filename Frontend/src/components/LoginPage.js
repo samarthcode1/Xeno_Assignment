@@ -8,37 +8,83 @@ const LoginPage = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission for sign-in or sign-up here
+
+    // Handling email/password authentication
     if (isSignUp) {
       console.log('Signing up with', username, password);
-      // Add your sign-up logic here
+      // Call your API to sign up the user
+      try {
+        const response = await fetch('/api/signup', {
+          method: 'POST',
+          body: JSON.stringify({ username, password }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.ok) {
+          navigate('/');
+        } else {
+          // Handle error during signup
+          console.error('Sign up failed');
+        }
+      } catch (error) {
+        console.error('Error during sign up:', error);
+      }
     } else {
       console.log('Signing in with', username, password);
-      // Add your sign-in logic here
+      // Call your API to log in the user
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          body: JSON.stringify({ username, password }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.ok) {
+          navigate('/');
+        } else {
+          // Handle error during login
+          console.error('Login failed');
+        }
+      } catch (error) {
+        console.error('Error during login:', error);
+      }
     }
-
-    // After successful login/sign-up, redirect to home page
-    navigate('/');
   };
 
-  const handleGoogleLogin = (response) => {
-    // Handle Google login response
-    console.log(response);
-    // You can store the response or handle the login state here
-    navigate('/');
+  const handleGoogleLogin = async (response) => {
+    console.log('Google login response:', response);
+
+    // Send the Google token to your backend to authenticate
+    try {
+      const googleToken = response.credential;
+      const res = await fetch('/api/google-login', {
+        method: 'POST',
+        body: JSON.stringify({ token: googleToken }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (res.ok) {
+        navigate('/');
+      } else {
+        console.error('Google login failed');
+      }
+    } catch (error) {
+      console.error('Error during Google login:', error);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-500 to-blue-700 flex items-center justify-center">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg space-y-6">
-        {/* Title Section */}
         <h2 className="text-2xl font-semibold text-center text-gray-800">
           {isSignUp ? 'Sign Up' : 'Sign In'}
         </h2>
 
-        {/* Google Sign-In Button Section */}
         <div className="w-full flex justify-center">
           <GoogleLogin
             onSuccess={handleGoogleLogin}
@@ -47,12 +93,10 @@ const LoginPage = () => {
             className="w-full max-w-xs"
           />
         </div>
-        
+
         <div className="my-4 text-center text-gray-600">OR</div>
 
-        {/* Form Section */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Username Input */}
           <div className="flex flex-col space-y-2">
             <label htmlFor="username" className="text-sm font-medium text-gray-700">Username</label>
             <input
@@ -65,7 +109,6 @@ const LoginPage = () => {
             />
           </div>
 
-          {/* Password Input */}
           <div className="flex flex-col space-y-2">
             <label htmlFor="password" className="text-sm font-medium text-gray-700">Password</label>
             <input
@@ -78,7 +121,6 @@ const LoginPage = () => {
             />
           </div>
 
-          {/* Submit Button */}
           <div className="mt-4">
             <button
               type="submit"
@@ -88,7 +130,6 @@ const LoginPage = () => {
             </button>
           </div>
 
-          {/* Toggle between Sign In / Sign Up */}
           <div className="mt-4 text-center text-sm text-gray-600">
             <button
               type="button"
