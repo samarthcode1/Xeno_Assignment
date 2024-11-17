@@ -11,10 +11,8 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Handling email/password authentication
     if (isSignUp) {
       console.log('Signing up with', username, password);
-      // Call your API to sign up the user
       try {
         const response = await fetch('/api/signup', {
           method: 'POST',
@@ -26,7 +24,6 @@ const LoginPage = () => {
         if (response.ok) {
           navigate('/');
         } else {
-          // Handle error during signup
           console.error('Sign up failed');
         }
       } catch (error) {
@@ -34,7 +31,6 @@ const LoginPage = () => {
       }
     } else {
       console.log('Signing in with', username, password);
-      // Call your API to log in the user
       try {
         const response = await fetch('/api/login', {
           method: 'POST',
@@ -46,7 +42,6 @@ const LoginPage = () => {
         if (response.ok) {
           navigate('/');
         } else {
-          // Handle error during login
           console.error('Login failed');
         }
       } catch (error) {
@@ -58,7 +53,6 @@ const LoginPage = () => {
   const handleGoogleLogin = async (response) => {
     console.log('Google login response:', response);
 
-    // Send the Google token to your backend to authenticate
     try {
       const googleToken = response.credential;
       const res = await fetch('/api/google-login', {
