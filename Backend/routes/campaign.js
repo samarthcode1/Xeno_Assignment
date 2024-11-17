@@ -18,7 +18,6 @@ router.post('/', async (req, res) => {
     }
 });
 
-// GET route to fetch all past campaigns
 router.get('/', async (req, res) => {
     try {
         const campaigns = await Campaign.find().sort({ createdAt: -1 });

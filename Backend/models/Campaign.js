@@ -7,9 +7,8 @@ const CampaignSchema = new mongoose.Schema({
   },
   message: {
     type: String,
-    required: true,  // Ensure this is required
+    required: true,  
   },
-  // Additional fields if any
 });
 
 module.exports = mongoose.model('Campaign', CampaignSchema);

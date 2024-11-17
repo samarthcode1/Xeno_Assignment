@@ -1,9 +1,6 @@
-// routes/deliveryReceipt.js
 const express = require('express');
 const router = express.Router();
-const CommunicationLog = require('../models/CommunicationLog');  // Corrected typo
-
-// Route to update delivery status
+const CommunicationLog = require('../models/CommunicationLog'); 
 router.post('/update-status/:logId', async (req, res) => {
     try {
         const { status } = req.body;
@@ -30,7 +27,7 @@ router.post('/delivery-receipt', async (req, res) => {
         const log = await CommunicationLog.findById(logId);
         if (!log) return res.status(404).json({ error: 'Log not found' });
 
-        log.status = status;  // Update delivery status
+        log.status = status;  
         await log.save();
 
         res.status(200).json({ message: 'Delivery status updated successfully' });
