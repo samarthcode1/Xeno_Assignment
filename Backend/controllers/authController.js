@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const Users = require('../models/User');
 
 const googleAuth = passport.authenticate('google', { scope: ['profile', 'email'] });
-const googleCallback = passport.authenticate('google', { failureRedirect: '/' });
+const googleCallback = passport.authenticate('google', { failureRedirect: '/login?error=google-auth-failed' });
 
 const googleCallbackSuccess = async (req, res) => {
     try {
@@ -23,11 +23,20 @@ const googleCallbackSuccess = async (req, res) => {
     }
 };
 
-const register = async (req, res, next) => {
+const validatePassword = (password) => {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return regex.test(password);
+};
+
+const register = async (req, res) => {
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
         return res.status(400).json({ success: false, message: 'All fields are required' });
+    }
+
+    if (!validatePassword(password)) {
+        return res.status(400).json({ success: false, message: 'Password must be at least 8 characters long and contain a number' });
     }
 
     try {
@@ -47,11 +56,12 @@ const register = async (req, res, next) => {
             token,
         });
     } catch (err) {
-        res.status(500).json({ success: false, message: 'Registration failed' });
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message || 'Registration failed' });
     }
 };
 
-const signIn = async (req, res, next) => {
+const signIn = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -60,6 +70,7 @@ const signIn = async (req, res, next) => {
 
     try {
         const user = await Users.findOne({ email }).select('+password');
+
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
@@ -78,7 +89,8 @@ const signIn = async (req, res, next) => {
             user: { id: user._id, username: user.username, email: user.email },
         });
     } catch (err) {
-        res.status(500).json({ success: false, message: 'Login failed' });
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message || 'Login failed' });
     }
 };
 
